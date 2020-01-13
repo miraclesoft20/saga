@@ -34,7 +34,7 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    MessageProducer messageProducer(@Qualifier("sagaConnectionFactory") ConnectionFactory connectionFactory, DomainEventPublisher domainEventPublisher){
-        return  new MessageProducerRabbitImpl(connectionFactory, domainEventPublisher);
+    MessageProducer messageProducer(@Qualifier("sagaConnectionFactory") ConnectionFactory connectionFactory, DomainEventPublisher domainEventPublisher) {
+        return new MessageProducerRabbitImpl(connectionFactory, domainEventPublisher);
     }
 }

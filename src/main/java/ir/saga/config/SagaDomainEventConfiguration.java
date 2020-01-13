@@ -10,11 +10,12 @@ import org.springframework.context.annotation.Bean;
 public class SagaDomainEventConfiguration {
 
     @Bean
-    public DomainEventBus domainEventBus(){
+    public DomainEventBus domainEventBus() {
         return new DomainEventBusImpl();
     }
+
     @Bean
-    public DomainEventPublisher domainEventPublisher(DomainEventBus bus){
+    public DomainEventPublisher domainEventPublisher(DomainEventBus bus) {
         return new DomainEventPublisherImpl(bus);
     }
 }

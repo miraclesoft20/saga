@@ -20,9 +20,9 @@ import java.util.Collections;
 
 @Configuration
 @EnableConfigurationProperties(SagaMongoConnectionProperties.class)
-@EnableMongoRepositories(basePackages = "ir.saga.repository",mongoTemplateRef = "sagaMongoTemplate")
+@EnableMongoRepositories(basePackages = "ir.saga.repository", mongoTemplateRef = "sagaMongoTemplate")
 @EntityScan(basePackages = "ir.saga.domain")
-public class SagaDatabaseConfiguration  {
+public class SagaDatabaseConfiguration {
     private int socketTimeout = 1000 * 30;
     private int connectionTimeout = 1000 * 30;
     @Autowired
@@ -41,6 +41,7 @@ public class SagaDatabaseConfiguration  {
         return new SimpleMongoDbFactory(mongoClient, this.sagaMongoConnectionProperties.getProperties().getDatabase());
 
     }
+
     @Primary
     @Bean(name = "sagaMongoClient")
     public MongoClient sagaMongoClient() {
@@ -71,10 +72,6 @@ public class SagaDatabaseConfiguration  {
     public DocumentToZonedDateTimeConverter documentToZonedDateTimeConverter(){
         return  new DocumentToZonedDateTimeConverter();
     }*/
-
-
-
-
 
 
 }

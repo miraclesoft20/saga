@@ -1,5 +1,5 @@
 package ir.saga.command;
 
-public class SagaUnlockCommand implements Command{
+public class SagaUnlockCommand implements Command {
 
 }

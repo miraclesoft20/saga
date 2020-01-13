@@ -1,12 +1,7 @@
 package ir.saga.command;
 
 
-import ir.saga.command.SagaLockManager;
 import ir.saga.common.StashedMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.util.Assert;
 import ir.saga.domain.SagaLock;
 import ir.saga.domain.SagaStash;
 import ir.saga.message.Message;
@@ -14,6 +9,10 @@ import ir.saga.message.MessageBuilder;
 import ir.saga.repository.SagaLockRepository;
 import ir.saga.repository.SagaStashRepository;
 import ir.saga.util.JSonMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Map;
@@ -22,10 +21,10 @@ import java.util.stream.Collectors;
 
 public class SagaLockManagerImpl implements SagaLockManager {
 
-  private Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
-  private final SagaLockRepository sagaLockRepository;
-  private final SagaStashRepository sagaStashRepository;
+    private final SagaLockRepository sagaLockRepository;
+    private final SagaStashRepository sagaStashRepository;
 
 
     public SagaLockManagerImpl(SagaLockRepository sagaLockRepository, SagaStashRepository sagaStashRepository) {
@@ -82,85 +81,85 @@ public class SagaLockManagerImpl implements SagaLockManager {
     return deleteFromSagaStashTableSql;
   }*/
 
-  @Override
-  public boolean claimLock(String sagaType, String sagaId, String target) {
-    while (true)
-      try {
-          SagaLock sagaLock = new SagaLock();
-          sagaLock.setSagaType(sagaType);
-          sagaLock.setSagaId(sagaId);
-          sagaLock.setTarget(target);
-          sagaLockRepository.insert(sagaLock);
-        logger.debug("Saga {} {} has locked {}", sagaType, sagaId, target);
-        return true;
-      } catch (DuplicateKeyException e) {
-        Optional<String> owningSagaId = selectForUpdate(target);
-        if (owningSagaId.isPresent()) {
-          if (owningSagaId.get().equals(sagaId))
-            return true;
-          else {
-            logger.debug("Saga {} {} is blocked by {} which has locked {}", sagaType, sagaId, owningSagaId, target);
-            return false;
-          }
-        }
-        logger.debug("{}  is repeating attempt to lock {}", sagaId, target);
-      }
-  }
-
-  private Optional<String> selectForUpdate(String target) {
-       return Optional.ofNullable(sagaLockRepository.findOneByTargetEquals(target).map(SagaLock::getSagaId).orElse(null));
-  }
-
-  @Override
-  public void stashMessage(String sagaType, String sagaId, String target, Message message) {
-
-    logger.debug("Stashing message from {} for {} : {}", sagaId, target, message);
-
-      SagaStash sagaStash = new SagaStash();
-      sagaStash.setMessageId(message.getRequiredHeader(Message.ID));
-      sagaStash.setTarget(target);
-      sagaStash.setSagaType(sagaType);
-      sagaStash.setSagaId(sagaId);
-      sagaStash.setMessageHeaders(JSonMapper.toJson(message.getHeaders()));
-      sagaStash.setMessagePayload(message.getPayload());
-
-      sagaStashRepository.save(sagaStash);
-  }
-
-  @Override
-  public Optional<Message> unlock(String sagaId, String target,String securityToken) {
-    Optional<String> owningSagaId = selectForUpdate(target);
-    Assert.isTrue(owningSagaId.isPresent());
-    Assert.isTrue(owningSagaId.get().equals(sagaId), String.format("Expected owner to be %s but is %s", sagaId, owningSagaId.get()));
-
-    logger.debug("Saga {} has unlocked {}", sagaId, target);
-
-      List<StashedMessage> stashedMessages = sagaStashRepository.findAllBySagaIdEqualsAndTargetEquals(sagaId,target).map(sagaStash -> {
-          return  new StashedMessage(sagaStash.getSagaType(), sagaStash.getSagaId(),
-                  MessageBuilder.withPayload(sagaStash.getMessagePayload()).withExtraHeaders("",
-                          JSonMapper.fromJson(sagaStash.getMessageHeaders(), Map.class)).build(securityToken));
-      }).collect(Collectors.toList());
-
-
-    if (stashedMessages.isEmpty()) {
-
-      assertEqualToOne(sagaStashRepository.deleteSagaStashByTarget(target));
-      return Optional.empty();
+    @Override
+    public boolean claimLock(String sagaType, String sagaId, String target) {
+        while (true)
+            try {
+                SagaLock sagaLock = new SagaLock();
+                sagaLock.setSagaType(sagaType);
+                sagaLock.setSagaId(sagaId);
+                sagaLock.setTarget(target);
+                sagaLockRepository.insert(sagaLock);
+                logger.debug("Saga {} {} has locked {}", sagaType, sagaId, target);
+                return true;
+            } catch (DuplicateKeyException e) {
+                Optional<String> owningSagaId = selectForUpdate(target);
+                if (owningSagaId.isPresent()) {
+                    if (owningSagaId.get().equals(sagaId))
+                        return true;
+                    else {
+                        logger.debug("Saga {} {} is blocked by {} which has locked {}", sagaType, sagaId, owningSagaId, target);
+                        return false;
+                    }
+                }
+                logger.debug("{}  is repeating attempt to lock {}", sagaId, target);
+            }
     }
 
-    StashedMessage stashedMessage = stashedMessages.get(0);
+    private Optional<String> selectForUpdate(String target) {
+        return Optional.ofNullable(sagaLockRepository.findOneByTargetEquals(target).map(SagaLock::getSagaId).orElse(null));
+    }
 
-    logger.debug("unstashed from {}  for {} : {}", sagaId, target, stashedMessage.getMessage());
+    @Override
+    public void stashMessage(String sagaType, String sagaId, String target, Message message) {
+
+        logger.debug("Stashing message from {} for {} : {}", sagaId, target, message);
+
+        SagaStash sagaStash = new SagaStash();
+        sagaStash.setMessageId(message.getRequiredHeader(Message.ID));
+        sagaStash.setTarget(target);
+        sagaStash.setSagaType(sagaType);
+        sagaStash.setSagaId(sagaId);
+        sagaStash.setMessageHeaders(JSonMapper.toJson(message.getHeaders()));
+        sagaStash.setMessagePayload(message.getPayload());
+
+        sagaStashRepository.save(sagaStash);
+    }
+
+    @Override
+    public Optional<Message> unlock(String sagaId, String target, String securityToken) {
+        Optional<String> owningSagaId = selectForUpdate(target);
+        Assert.isTrue(owningSagaId.isPresent());
+        Assert.isTrue(owningSagaId.get().equals(sagaId), String.format("Expected owner to be %s but is %s", sagaId, owningSagaId.get()));
+
+        logger.debug("Saga {} has unlocked {}", sagaId, target);
+
+        List<StashedMessage> stashedMessages = sagaStashRepository.findAllBySagaIdEqualsAndTargetEquals(sagaId, target).map(sagaStash -> {
+            return new StashedMessage(sagaStash.getSagaType(), sagaStash.getSagaId(),
+                    MessageBuilder.withPayload(sagaStash.getMessagePayload()).withExtraHeaders("",
+                            JSonMapper.fromJson(sagaStash.getMessageHeaders(), Map.class)).build(securityToken));
+        }).collect(Collectors.toList());
 
 
-    assertEqualToOne( sagaLockRepository.update(stashedMessage.getSagaType(),stashedMessage.getSagaId(),target));
-    assertEqualToOne(sagaStashRepository.deleteSagaStashByMessageId(stashedMessage.getMessage().getId()));
+        if (stashedMessages.isEmpty()) {
 
-    return Optional.of(stashedMessage.getMessage());
-  }
+            assertEqualToOne(sagaStashRepository.deleteSagaStashByTarget(target));
+            return Optional.empty();
+        }
 
-  private void assertEqualToOne(Long n) {
-    if (n != 1)
-      throw new RuntimeException("Expected to update one row but updated: " + n);
-  }
+        StashedMessage stashedMessage = stashedMessages.get(0);
+
+        logger.debug("unstashed from {}  for {} : {}", sagaId, target, stashedMessage.getMessage());
+
+
+        assertEqualToOne(sagaLockRepository.update(stashedMessage.getSagaType(), stashedMessage.getSagaId(), target));
+        assertEqualToOne(sagaStashRepository.deleteSagaStashByMessageId(stashedMessage.getMessage().getId()));
+
+        return Optional.of(stashedMessage.getMessage());
+    }
+
+    private void assertEqualToOne(Long n) {
+        if (n != 1)
+            throw new RuntimeException("Expected to update one row but updated: " + n);
+    }
 }

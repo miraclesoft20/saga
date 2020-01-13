@@ -6,10 +6,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-/*import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;*/
 import ir.saga.message.common.Int128Module;
 
 import java.io.IOException;
+
+/*import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;*/
 
 public class JSonMapper {
     public static ObjectMapper objectMapper = new ObjectMapper();
@@ -47,7 +48,7 @@ public class JSonMapper {
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.registerModule(new Int128Module());
-    /*    objectMapper.registerModule((new Jdk8Module()).configureAbsentsAsNulls(true));*/
+        /*    objectMapper.registerModule((new Jdk8Module()).configureAbsentsAsNulls(true));*/
     }
 }
 

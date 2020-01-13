@@ -1,4 +1,4 @@
 package ir.saga.command.common;
 
-public class Failure  implements Outcome {
+public class Failure implements Outcome {
 }

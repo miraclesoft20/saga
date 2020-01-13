@@ -3,15 +3,17 @@ package ir.saga.mongo;
 import org.bson.Document;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.WritingConverter;
+
 import java.time.ZonedDateTime;
 import java.util.Date;
+
 @WritingConverter
 public class ZonedDateTimeToDocumentConverter implements Converter<ZonedDateTime, Document> {
     static final String DATE_TIME = "dateTime";
     static final String ZONE = "zone";
 
     @Override
-    public Document convert( ZonedDateTime zonedDateTime) {
+    public Document convert(ZonedDateTime zonedDateTime) {
         if (zonedDateTime == null) return null;
 
         Document document = new Document();

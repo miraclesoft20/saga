@@ -85,7 +85,7 @@ public class SagaActions<Data extends SagaData> {
         }
 
         public Builder<Data> withUpdatedState(String state) {
-            this.updatedState= Optional.of(state);
+            this.updatedState = Optional.of(state);
             return this;
         }
 

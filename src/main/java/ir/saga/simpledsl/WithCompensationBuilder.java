@@ -7,7 +7,7 @@ import ir.saga.common.SagaData;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public interface WithCompensationBuilder <Data extends SagaData> {
+public interface WithCompensationBuilder<Data extends SagaData> {
 
     InvokeParticipantStepBuilder<Data> withCompensation(Function<Data, CommandWithDestination> compensation);
 

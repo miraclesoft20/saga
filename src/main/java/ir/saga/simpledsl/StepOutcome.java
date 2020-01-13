@@ -39,6 +39,7 @@ public abstract class StepOutcome {
     public static StepOutcome makeLocalOutcome(Optional<RuntimeException> localOutcome) {
         return new LocalStepOutcome(localOutcome);
     }
+
     public static StepOutcome makeRemoteStepOutcome(List<CommandWithDestination> commandsToSend) {
         return new RemoteStepOutcome(commandsToSend);
     }

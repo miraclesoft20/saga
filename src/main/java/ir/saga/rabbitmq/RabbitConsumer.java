@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 public class RabbitConsumer extends Connector implements Runnable {
-    private final Consumer consumer ;
+    private final Consumer consumer;
 
     public RabbitConsumer(ConnectionFactory connectionFactory, String queueName, Consumer consumer) throws IOException, TimeoutException {
         super(connectionFactory, queueName);
@@ -23,7 +23,7 @@ public class RabbitConsumer extends Connector implements Runnable {
     public void run() {
         try {
             getChannel().basicConsume(getQueueName(), true, consumer);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             throw new ConsumeChannelException(getQueueName());
         }
     }

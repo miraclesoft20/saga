@@ -13,7 +13,7 @@ public class StepToExecute<Data extends SagaData> {
     private final boolean compensating;
 
 
-  public StepToExecute(Optional<SagaStep<Data>> step, int skipped, boolean compensating) {
+    public StepToExecute(Optional<SagaStep<Data>> step, int skipped, boolean compensating) {
         this.compensating = compensating;
         this.step = step;
         this.skipped = skipped;

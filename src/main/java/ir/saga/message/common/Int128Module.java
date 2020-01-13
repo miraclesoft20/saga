@@ -16,49 +16,49 @@ import java.lang.reflect.Type;
 
 public class Int128Module extends SimpleModule {
 
-  static class IdDeserializer extends StdScalarDeserializer<Int128> {
+    static class IdDeserializer extends StdScalarDeserializer<Int128> {
 
-    public IdDeserializer() {
-      super(Int128.class);
+        public IdDeserializer() {
+            super(Int128.class);
+        }
+
+        public Int128 deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
+            JsonToken token = jp.getCurrentToken();
+            if (token == JsonToken.VALUE_STRING) {
+                String str = jp.getText().trim();
+                if (str.isEmpty())
+                    return null;
+                else
+                    return Int128.fromString(str);
+            } else
+                throw ctxt.mappingException(handledType());
+        }
     }
 
-    public Int128 deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
-      JsonToken token = jp.getCurrentToken();
-      if (token == JsonToken.VALUE_STRING) {
-        String str = jp.getText().trim();
-        if (str.isEmpty())
-          return null;
-        else
-          return Int128.fromString(str);
-      } else
-        throw ctxt.mappingException(handledType());
-    }
-  }
+    static class IdSerializer extends StdScalarSerializer<Int128> {
+        public IdSerializer() {
+            super(Int128.class);
+        }
 
-  static class IdSerializer extends StdScalarSerializer<Int128> {
-    public IdSerializer() {
-      super(Int128.class);
+        @Override
+        public void serialize(Int128 value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+            jgen.writeString(value.asString());
+        }
+
+        @Override
+        public JsonNode getSchema(SerializerProvider provider, Type typeHint, boolean isOptional) throws JsonMappingException {
+            return createSchemaNode("string", true);
+        }
     }
 
     @Override
-    public void serialize(Int128 value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-      jgen.writeString(value.asString());
+    public String getModuleName() {
+        return "IdJsonModule";
     }
 
-    @Override
-    public JsonNode getSchema(SerializerProvider provider, Type typeHint, boolean isOptional) throws JsonMappingException {
-      return createSchemaNode("string", true);
+    public Int128Module() {
+        addDeserializer(Int128.class, new IdDeserializer());
+        addSerializer(Int128.class, new IdSerializer());
     }
-  }
-
-  @Override
-  public String getModuleName() {
-    return "IdJsonModule";
-  }
-
-  public Int128Module() {
-    addDeserializer(Int128.class, new IdDeserializer());
-    addSerializer(Int128.class, new IdSerializer());
-  }
 
 }

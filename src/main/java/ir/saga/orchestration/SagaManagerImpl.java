@@ -1,25 +1,24 @@
 package ir.saga.orchestration;
 
+import ir.saga.command.LockTarget;
+import ir.saga.command.SagaCommandHeaders;
 import ir.saga.command.SagaLockManager;
 import ir.saga.command.SagaUnlockCommand;
 import ir.saga.command.common.*;
 import ir.saga.common.SagaData;
+import ir.saga.common.SagaReplyHeaders;
+import ir.saga.domain.SagaInstance;
 import ir.saga.events.DomainEventBus;
 import ir.saga.events.MessageTimeoutEvent;
-import ir.saga.message.MessageImpl;
+import ir.saga.message.Message;
+import ir.saga.message.MessageBuilder;
+import ir.saga.message.consumer.MessageConsumer;
+import ir.saga.repository.SagaInstanceRepository;
 import ir.saga.simpledsl.SimpleSaga;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
-import ir.saga.command.LockTarget;
-import ir.saga.command.SagaCommandHeaders;
-import ir.saga.common.SagaReplyHeaders;
-import ir.saga.domain.SagaInstance;
-import ir.saga.message.Message;
-import ir.saga.message.MessageBuilder;
-import ir.saga.message.consumer.MessageConsumer;
-import ir.saga.repository.SagaInstanceRepository;
 
 import javax.annotation.PostConstruct;
 import java.time.ZonedDateTime;
@@ -49,7 +48,7 @@ public abstract class SagaManagerImpl<Data extends SagaData> extends SimpleSaga<
     public void subscribeToReplyChannel() {
         messageConsumer.subscribe(this.getSagaType() + "-consumer", singleton(makeSagaReplyChannel()),
                 this::handleMessage);
-        eventBus.subscribe(this.getSagaType(),this::handleMessageTimeoutEvent);
+        eventBus.subscribe(this.getSagaType(), this::handleMessageTimeoutEvent);
     }
 
     private String makeSagaReplyChannel() {
@@ -58,17 +57,17 @@ public abstract class SagaManagerImpl<Data extends SagaData> extends SimpleSaga<
 
 
     @Override
-    public SagaInstance create(Data sagaData, String currentUsername, String securityToken,String clientIp) {
-        return create(sagaData, Optional.empty(), currentUsername, securityToken,clientIp);
+    public SagaInstance create(Data sagaData, String currentUsername, String securityToken, String clientIp) {
+        return create(sagaData, Optional.empty(), currentUsername, securityToken, clientIp);
     }
 
     @Override
-    public SagaInstance create(Data data, Class targetClass, Object targetId, String currentUsername, String securityToken,String clientIp) {
-        return create(data, Optional.of(new LockTarget(targetClass, targetId).getTarget()), currentUsername, securityToken,clientIp);
+    public SagaInstance create(Data data, Class targetClass, Object targetId, String currentUsername, String securityToken, String clientIp) {
+        return create(data, Optional.of(new LockTarget(targetClass, targetId).getTarget()), currentUsername, securityToken, clientIp);
     }
 
     @Override
-    public SagaInstance create(Data sagaData, Optional<String> resource, String currentUsername, String securityToken,String clientIp) {
+    public SagaInstance create(Data sagaData, Optional<String> resource, String currentUsername, String securityToken, String clientIp) {
 
 
         SagaInstance sagaInstance = new SagaInstance(getSagaType(),
@@ -92,7 +91,7 @@ public abstract class SagaManagerImpl<Data extends SagaData> extends SimpleSaga<
             throw e;
         });
 
-        processActions(sagaId, sagaInstance, sagaData, actions, securityToken,clientIp);
+        processActions(sagaId, sagaInstance, sagaData, actions, securityToken, clientIp);
 
         return sagaInstance;
     }
@@ -121,38 +120,36 @@ public abstract class SagaManagerImpl<Data extends SagaData> extends SimpleSaga<
     }
 
 
-    public void handleMessage(String channel,Message message) {
-        if(getListenerChannel().equals(channel)){
+    public void handleMessage(String channel, Message message) {
+        if (getListenerChannel().equals(channel)) {
             logger.debug("handle message invoked {}", message);
             if (message.hasHeader(SagaReplyHeaders.REPLY_SAGA_ID)) {
                 handleReply(message);
             } else {
                 logger.warn("Handle message doesn't know what to do with: {} ", message);
             }
-        }else{
+        } else {
             handleReplyTimeout(message);
         }
 
     }
 
 
-    private void handleMessageTimeoutEvent(List<MessageTimeoutEvent> timeoutEvents){
+    private void handleMessageTimeoutEvent(List<MessageTimeoutEvent> timeoutEvents) {
 
-        for(MessageTimeoutEvent timeoutEvent :timeoutEvents){
+        for (MessageTimeoutEvent timeoutEvent : timeoutEvents) {
             Message message = timeoutEvent.getMessage();
-            message.setHeader(SagaReplyHeaders.REPLY_SAGA_ID,message.getRequiredHeader(SagaCommandHeaders.SAGA_ID));
-            message.setHeader(SagaReplyHeaders.REPLY_SAGA_TYPE,message.getRequiredHeader(SagaCommandHeaders.SAGA_TYPE));
-            message.setHeader(ReplyMessageHeaders.REPLY_OUTCOME,CommandReplyOutcome.FAILURE.name());
-            message.setHeader(ReplyMessageHeaders.REPLY_TYPE,TimeoutFailure.class.getName());
+            message.setHeader(SagaReplyHeaders.REPLY_SAGA_ID, message.getRequiredHeader(SagaCommandHeaders.SAGA_ID));
+            message.setHeader(SagaReplyHeaders.REPLY_SAGA_TYPE, message.getRequiredHeader(SagaCommandHeaders.SAGA_TYPE));
+            message.setHeader(ReplyMessageHeaders.REPLY_OUTCOME, CommandReplyOutcome.FAILURE.name());
+            message.setHeader(ReplyMessageHeaders.REPLY_TYPE, TimeoutFailure.class.getName());
             handleReply(message);
         }
     }
 
-    private  void handleReplyTimeout(Message message){
-        logger.debug("timeout for {}",message);
+    private void handleReplyTimeout(Message message) {
+        logger.debug("timeout for {}", message);
     }
-
-
 
 
     private void handleReply(Message message) {
@@ -182,12 +179,12 @@ public abstract class SagaManagerImpl<Data extends SagaData> extends SimpleSaga<
 
         logger.info("Handled reply. Sending commands {}", actions.getCommands());
 
-        processActions(sagaId, sagaInstance, sagaData, actions, message.getSecurityToken(),message.getClientIp());
+        processActions(sagaId, sagaInstance, sagaData, actions, message.getSecurityToken(), message.getClientIp());
 
 
     }
 
-    private void processActions(String sagaId, SagaInstance sagaInstance, Data sagaData, SagaActions<Data> actions, String securityToken,String clientIp) {
+    private void processActions(String sagaId, SagaInstance sagaInstance, Data sagaData, SagaActions<Data> actions, String securityToken, String clientIp) {
 
 
         while (true) {
@@ -202,7 +199,7 @@ public abstract class SagaManagerImpl<Data extends SagaData> extends SimpleSaga<
                     lastRequestId = sagaCommandProducer.sendCommands(this.getSagaType(),
                             sagaId,
                             actions.getCommands(),
-                            this.makeSagaReplyChannel(), securityToken,clientIp);
+                            this.makeSagaReplyChannel(), securityToken, clientIp);
                 } catch (RuntimeException e) {
                     actions = failedActions(actions);
                 }
@@ -243,8 +240,8 @@ public abstract class SagaManagerImpl<Data extends SagaData> extends SimpleSaga<
         return message.getHeader(SagaReplyHeaders.REPLY_SAGA_TYPE).map(x -> x.equals(getSagaType())).orElse(false);
     }
 
-    private SagaActions<Data> failedActions(SagaActions<Data> actions){
-       return getStateDefinition().handleReply(actions.getUpdatedState().get(), actions.getUpdatedSagaData().get(), MessageBuilder
+    private SagaActions<Data> failedActions(SagaActions<Data> actions) {
+        return getStateDefinition().handleReply(actions.getUpdatedState().get(), actions.getUpdatedSagaData().get(), MessageBuilder
                 .withPayload("{}")
                 .withHeader(ReplyMessageHeaders.REPLY_OUTCOME, CommandReplyOutcome.FAILURE.name())
                 .withHeader(ReplyMessageHeaders.REPLY_TYPE, Failure.class.getName())

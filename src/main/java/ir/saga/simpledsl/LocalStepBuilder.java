@@ -6,7 +6,7 @@ import ir.saga.orchestration.SagaDefinition;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class LocalStepBuilder <Data extends SagaData>  {
+public class LocalStepBuilder<Data extends SagaData> {
     private final SimpleSagaDefinitionBuilder<Data> parent;
     private final Consumer<Data> localFunction;
     private Optional<Consumer<Data>> compensation = Optional.empty();

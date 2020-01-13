@@ -1,14 +1,13 @@
 package ir.saga.domain;
 
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 import ir.saga.orchestration.DestinationAndResource;
 import ir.saga.orchestration.SerializedSagaData;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.Set;
 
 @Document(collection = "sagaInstance")
@@ -47,10 +46,11 @@ public class SagaInstance {
         this.stateName = stateName;
     }
 
-    public SagaInstance(){
+    public SagaInstance() {
 
     }
-    public SagaInstance(String sagaType, String sagaId, String stateName, String lastRequestId, SerializedSagaData serializedSagaData, Set<DestinationAndResource> destinationsAndResources,Instant createdDate,String createdBy) {
+
+    public SagaInstance(String sagaType, String sagaId, String stateName, String lastRequestId, SerializedSagaData serializedSagaData, Set<DestinationAndResource> destinationsAndResources, Instant createdDate, String createdBy) {
         this.sagaType = sagaType;
         this.id = sagaId;
         this.stateName = stateName;
@@ -58,7 +58,7 @@ public class SagaInstance {
         this.serializedSagaData = serializedSagaData;
         this.destinationsAndResources = destinationsAndResources;
         this.createdDate = createdDate;
-        this.createdBy = createdBy ;
+        this.createdBy = createdBy;
     }
 
     public SerializedSagaData getSerializedSagaData() {

@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class ParticipantInvocationImpl <Data, C extends Command> extends AbstractParticipantInvocation<Data> {
+public class ParticipantInvocationImpl<Data, C extends Command> extends AbstractParticipantInvocation<Data> {
     private Function<Data, CommandWithDestination> commandBuilder;
 
 

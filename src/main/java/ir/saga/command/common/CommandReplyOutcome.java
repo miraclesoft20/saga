@@ -1,3 +1,3 @@
 package ir.saga.command.common;
 
-public enum CommandReplyOutcome { SUCCESS, FAILURE }
+public enum CommandReplyOutcome {SUCCESS, FAILURE}

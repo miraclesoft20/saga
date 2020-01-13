@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.query.Update;
 
 import java.util.Optional;
 
-public class SagaLockRepositoryImpl implements SagaLockRepositoryCustom{
+public class SagaLockRepositoryImpl implements SagaLockRepositoryCustom {
     private final String COLLECTION = "sagaLock";
 
     @Qualifier("sagaMongoTemplate")
@@ -33,8 +33,8 @@ public class SagaLockRepositoryImpl implements SagaLockRepositoryCustom{
 
     public Optional<SagaLock> findOneByTargetEquals(String target) {
         Query query = new Query();
-          query.addCriteria(Criteria.where("target").is(target));
-        return Optional.ofNullable(sagaMongoTemplate.findOne(query, SagaLock.class,COLLECTION));
+        query.addCriteria(Criteria.where("target").is(target));
+        return Optional.ofNullable(sagaMongoTemplate.findOne(query, SagaLock.class, COLLECTION));
     }
 
 }

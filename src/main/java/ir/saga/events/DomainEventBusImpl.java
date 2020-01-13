@@ -6,11 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 
-public class DomainEventBusImpl implements DomainEventBus{
+public class DomainEventBusImpl implements DomainEventBus {
 
-    private Map<String,List<DomainEventHandler>>  subscriptions = new HashMap<>();
+    private Map<String, List<DomainEventHandler>> subscriptions = new HashMap<>();
+
     @Override
-    public void subscribe(String aggregateType,DomainEventHandler handler) {
+    public void subscribe(String aggregateType, DomainEventHandler handler) {
         List<DomainEventHandler> handlers = subscriptions.get(aggregateType);
         if (handlers == null) {
             handlers = new ArrayList<>();
@@ -22,8 +23,8 @@ public class DomainEventBusImpl implements DomainEventBus{
     @Override
     public void push(String aggregateType, Object aggregateId, List<MessageTimeoutEvent> domainEvents) {
         List<DomainEventHandler> handlers = subscriptions.get(aggregateType);
-           for(DomainEventHandler handler :handlers)
-               handler.accept(domainEvents);
+        for (DomainEventHandler handler : handlers)
+            handler.accept(domainEvents);
     }
 
     @Override

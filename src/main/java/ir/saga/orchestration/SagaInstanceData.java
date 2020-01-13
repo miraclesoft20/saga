@@ -3,7 +3,7 @@ package ir.saga.orchestration;
 import ir.saga.common.SagaData;
 import ir.saga.domain.SagaInstance;
 
-public class SagaInstanceData <Data extends SagaData> {
+public class SagaInstanceData<Data extends SagaData> {
 
     private final SagaInstance sagaInstance;
     private final Data sagaData;

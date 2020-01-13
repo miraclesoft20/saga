@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class MessageImpl implements Message  {
+public class MessageImpl implements Message {
 
     private String payload;
     private Map<String, String> headers;
@@ -17,11 +17,11 @@ public class MessageImpl implements Message  {
         this.headers = headers;
     }
 
-   /* @Override
-    public String toString() {
-        return JSonMapper.toJson(this);
-    }
-*/
+    /* @Override
+     public String toString() {
+         return JSonMapper.toJson(this);
+     }
+ */
     public String getPayload() {
         return payload;
     }
@@ -85,6 +85,6 @@ public class MessageImpl implements Message  {
 
     @Override
     public String getSecurityToken() {
-        return  getHeader(Message.SECURITY_TOKEN).orElse("");
+        return getHeader(Message.SECURITY_TOKEN).orElse("");
     }
 }

@@ -3,7 +3,7 @@ package ir.saga.orchestration;
 import ir.saga.util.JSonMapper;
 
 public class SagaDataSerde {
-    public static <Data > SerializedSagaData serializeSagaData(Data sagaData) {
+    public static <Data> SerializedSagaData serializeSagaData(Data sagaData) {
         return new SerializedSagaData(sagaData.getClass().getName(), JSonMapper.toJson(sagaData));
     }
 
@@ -15,6 +15,6 @@ public class SagaDataSerde {
             throw new RuntimeException(e);
         }
         Object x = JSonMapper.fromJson(serializedSagaData.getSagaDataJSON(), clasz);
-        return (Data)x;
+        return (Data) x;
     }
 }

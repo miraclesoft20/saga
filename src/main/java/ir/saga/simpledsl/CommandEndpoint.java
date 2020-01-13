@@ -4,13 +4,13 @@ import ir.saga.command.Command;
 
 import java.util.Set;
 
-public class CommandEndpoint <C extends Command> {
+public class CommandEndpoint<C extends Command> {
 
     private String commandChannel;
     private Class<C> commandClass;
     private Set<Class> replyClasses;
 
-  public CommandEndpoint(String commandChannel, Class<C> commandClass, Set<Class> replyClasses) {
+    public CommandEndpoint(String commandChannel, Class<C> commandClass, Set<Class> replyClasses) {
         this.commandChannel = commandChannel;
         this.commandClass = commandClass;
         this.replyClasses = replyClasses;

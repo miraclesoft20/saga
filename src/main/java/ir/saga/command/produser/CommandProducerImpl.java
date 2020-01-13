@@ -2,9 +2,9 @@ package ir.saga.command.produser;
 
 import ir.saga.command.Command;
 import ir.saga.command.common.CommandMessageHeaders;
-import ir.saga.message.common.IdGenerator;
 import ir.saga.message.Message;
 import ir.saga.message.MessageBuilder;
+import ir.saga.message.common.IdGenerator;
 import ir.saga.message.producer.MessageProducer;
 import ir.saga.util.JSonMapper;
 
@@ -21,22 +21,22 @@ public class CommandProducerImpl implements CommandProducer {
     }
 
     @Override
-    public String send(String channel, Command command, String replyTo, Map<String, String> headers,String securityToken) {
-        return send(channel, null, command, replyTo, headers,securityToken);
+    public String send(String channel, Command command, String replyTo, Map<String, String> headers, String securityToken) {
+        return send(channel, null, command, replyTo, headers, securityToken);
     }
 
     @Override
-    public String send(String channel, String resource, Command command, String replyTo, Map<String, String> headers,String securityToken) {
-        Message message = makeMessage(channel, resource, command, replyTo, headers,securityToken);
-        message.setHeader(Message.ID,idGenerator.genId().asString());
+    public String send(String channel, String resource, Command command, String replyTo, Map<String, String> headers, String securityToken) {
+        Message message = makeMessage(channel, resource, command, replyTo, headers, securityToken);
+        message.setHeader(Message.ID, idGenerator.genId().asString());
         messageProducer.send(channel, message);
         return message.getId();
     }
 
     @Override
     public String sendWithTimoutListener(String channel, String resource, Command command, String replyTo, Map<String, String> headers, String securityToken) {
-        Message message = makeMessage(channel, resource, command, replyTo, headers,securityToken);
-        message.setHeader(Message.ID,idGenerator.genId().asString());
+        Message message = makeMessage(channel, resource, command, replyTo, headers, securityToken);
+        message.setHeader(Message.ID, idGenerator.genId().asString());
         messageProducer.sendWithTimeoutListener(channel, message);
         return message.getId();
 

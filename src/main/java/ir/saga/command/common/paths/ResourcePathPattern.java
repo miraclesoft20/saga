@@ -35,7 +35,7 @@ public class ResourcePathPattern {
     public boolean isSatisfiedBy(ResourcePath mr) {
         if (splits.length != mr.splits.length)
             return false;
-        for (int i = 0 ; i < mr.splits.length ; i++)
+        for (int i = 0; i < mr.splits.length; i++)
             if (!pathSegmentMatches(splits[i], mr.splits[i]))
                 return false;
         return true;
@@ -51,7 +51,7 @@ public class ResourcePathPattern {
 
     public Map<String, String> getPathVariableValues(ResourcePath mr) {
         Map<String, String> result = new HashMap<>();
-        for (int i = 0 ; i < mr.splits.length ; i++) {
+        for (int i = 0; i < mr.splits.length; i++) {
             String name = splits[i];
             if (isPlaceholder(name)) {
                 result.put(placeholderName(name), mr.splits[i]);

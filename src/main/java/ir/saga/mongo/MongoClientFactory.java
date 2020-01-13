@@ -1,13 +1,6 @@
 package ir.saga.mongo;
 
-import com.mongodb.*;
-import com.mongodb.MongoClientOptions.Builder;
-import org.springframework.boot.autoconfigure.mongo.MongoProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
-
-import java.util.Collections;
-import java.util.List;
+import com.mongodb.MongoClient;
 //todo -> version 3.11.2 => mongo db
 /*
 @Bean(name = "javersMongoClient")

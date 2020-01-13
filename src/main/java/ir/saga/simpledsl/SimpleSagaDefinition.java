@@ -4,7 +4,8 @@ package ir.saga.simpledsl;
 import ir.saga.command.common.ReplyMessageHeaders;
 import ir.saga.common.SagaData;
 import ir.saga.message.Message;
-import ir.saga.orchestration.*;
+import ir.saga.orchestration.SagaActions;
+import ir.saga.orchestration.SagaDefinition;
 import ir.saga.util.JSonMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
-public class SimpleSagaDefinition <Data extends SagaData> implements SagaDefinition<Data> {
+public class SimpleSagaDefinition<Data extends SagaData> implements SagaDefinition<Data> {
     private Logger logger = LoggerFactory.getLogger(getClass());
     private List<SagaStep<Data>> sagaSteps;
 
@@ -52,7 +53,6 @@ public class SimpleSagaDefinition <Data extends SagaData> implements SagaDefinit
             return executeNextStep(sagaData, state.startCompensating());
         }
     }
-
 
 
     private StepToExecute<Data> nextStepToExecute(SagaExecutionState state, Data data) {
