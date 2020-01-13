@@ -1,0 +1,11 @@
+
+¤squid:S1186U"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ñî”Õøÿÿÿÿ8˜òÜëö-
+msquid:UselessImportCheck"=Remove this unused import 'ir.saga.error.FailedSendExeption'.(¸ôúáüÿÿÿÿ8¦–İëö-
+Asquid:S11482"#Use a logger to log this exception.(Ç’Çê8€õÔ÷-
+¤squid:S1186Z"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(“ˆğÿÿÿÿÿ8˜òÜëö-
+_squid:UselessImportCheck
+"4Remove this unused import 'ir.saga.util.JSonMapper'.(®„–‹8­„§îö-
+Hsquid:S1181I"%Catch Exception instead of Throwable.(•”ø¾øÿÿÿÿ8À­›ìö-
+Ÿsquid:S1186P"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Šú¾™8˜òÜëö-
+¤squid:S1186c"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Ñ¼ÛÙüÿÿÿÿ8˜òÜëö-
+¤squid:S1186_"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¹ÿ×°úÿÿÿÿ8èéÆ÷-

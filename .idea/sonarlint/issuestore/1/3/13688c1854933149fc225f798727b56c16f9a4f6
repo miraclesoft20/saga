@@ -1,0 +1,5 @@
+
+xsquid:UselessImportCheck	"MRemove this unused import 'org.springframework.context.annotation.DependsOn'.(¯òï€8í‘¬óô-
+vsquid:UselessImportCheck"FRemove this unused import 'org.springframework.stereotype.Repository'.(¦ıÍıüÿÿÿÿ8ãú«óô-
+hsquid:S001192"IRename this generic name to match the regular expression '^[A-Z][0-9]?$'.(óâä¥8ûËîô-
+asquid:UselessImportCheck"6Remove this unused import 'javax.annotation.Resource'.(î¾Ì—8ª‘¡íô-

@@ -1,0 +1,4 @@
+
+Qsquid:S1068".Remove this unused "COLLECTION" private field.(ÙÎºŸøÿÿÿÿ8Ù†ùõ-
+ysquid:S00116"URename this field "COLLECTION" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÙÎºŸøÿÿÿÿ8ûû¨ïô-
+Dsquid:S1170"!Make this final field static too.(ÙÎºŸøÿÿÿÿ8ûû¨ïô-

@@ -1,0 +1,4 @@
+
+fsquid:S00119"IRename this generic name to match the regular expression '^[A-Z][0-9]?$'.(üÒž°þÿÿÿÿ
+Nsquid:S36551"7Call "Optional#isPresent()" before accessing the value.(½¹§€
+\squid:CallToDeprecatedMethod"/Remove this use of "notNull"; it is deprecated.(‘Åæ¢ûÿÿÿÿ
